@@ -18,6 +18,7 @@
 
 using namespace std;
 
+//Roman Class: Responsible for the Roman Numeral String and the value it evaluates to
 class Roman
 {
 	string romanStr;
@@ -27,8 +28,7 @@ class Roman
 public: 
 	void printSymbolTable();
 	void setSymbolTable();
-	map<char,int> getSymbolTable()
-	{
+	map<char,int> getSymbolTable(){
 		return symbolTableMap;
 	}
 	Roman (string str, int val){
@@ -37,52 +37,59 @@ public:
 	}
 
 	void setValue();
-	void printValue()
-	{
+	void printValue(){
 		cout<<"\n\n"<<romanStr<<"  "<<romanVal<<"\n\n";
 	}
-	int getValue()
-	{
+	int getValue(){
 		return romanVal;
 	}
 	bool validateStr();
-	
-	
 
 };
 
 class BaseParser
 {
-	map<string,char> intergalacticalMap;
-	map<string,int> metalCreditsMap;
+	map<string,char> intergalacticalMap;	
 	vector<string> inputLines;
 	vector<string> intergalacticalData;
-	vector<string> creditsData;
+	
+protected:
 	vector<string> queries;
+	vector<string> creditsData;	
 	vector<string> output;
+	map<string,int> metalCreditsMap;
 
 	vector<string> getWordList(string str);
 	string getRoman(vector<string> wordlist);
 	int getUnits(string roman);
-	virtual vector<string> parseInput(string str) = 0;
+	virtual void parseInput(string str) = 0;
+	virtual void getOutput() = 0;
 
 public:
 
 	void getIntergalacticalMap();
-	void getMetalCreditsMap();
-	void getOutput();
+	void getMetalCreditsMap();	
 	void readAndSetInput(vector<string> lines);
 
 };
+
+//Class Parser inherits BaseParser. 
+//The function parseInput() is used to provide input in any desired format
+//It can be used as complete string of input / or filename (different types of files can be given as input)
+//It returns vector of strings which can be used further.
+
+//function getOutput() in this case is used simply put to console the desired result.
+//It can be inherited and implemented in a way to redirect the result in a file
 
 class Parser:public BaseParser
 {
 
 public:
-	vector<string> parseInput(string filename);
+	void parseInput(string filename);
+	void getOutput();
 };
 
-vector<string> Parser::parseInput(string filename)
+void Parser::parseInput(string filename)
 {
 	vector<string> inputLines;
 	std::string line;
@@ -103,9 +110,11 @@ vector<string> Parser::parseInput(string filename)
 	{
 		std::cout << "Unable to open file" << std::endl << std::endl;
 	}
-	return inputLines;
+	readAndSetInput(inputLines);
+	//return inputLines;
 }
 
+//Helper function to create tokens of words from the given input string
 vector<string> BaseParser::getWordList(string str)
 {
 	istringstream iss(str);
@@ -116,6 +125,10 @@ vector<string> BaseParser::getWordList(string str)
 	return wordlist;
 }
 
+//This function creates 3 types of vector strings:
+//1. Which maps word to the Roman Symbols
+//2. Which help to find information regarding Credits per unit Metal
+//3. The queries
 void BaseParser::readAndSetInput(vector<string> lines)
 {
 	inputLines = lines;
@@ -135,16 +148,14 @@ void BaseParser::readAndSetInput(vector<string> lines)
 
 		else
 			queries.push_back(*itr);
-
-
-		
+	
     }
 	getIntergalacticalMap();
 	getMetalCreditsMap();
 	
 }
 
-
+//Creates a map (word -> roman_symbol)
 void BaseParser::getIntergalacticalMap()
 {
 
@@ -156,15 +167,20 @@ void BaseParser::getIntergalacticalMap()
 		if (wordlist[1] == "is")
 			intergalacticalMap.insert(pair<string,char>(wordlist[0],wordlist[2][0]));
 	}
+
+	//Following can be uncommented to print the intergalacticalMap
+	/*
 	map <string,char>::iterator it; 
 	for(it = intergalacticalMap.begin(); it != intergalacticalMap.end(); it++)
 	{
 		cout << (*it).first <<" = " <<(*it).second<<"\n";
 	}
 	cout<<"\n\n";
+	*/
 
 }
 
+//helper function to find the Integer Value from the Roman String
 int BaseParser::getUnits(string roman)
 {
 	
@@ -186,7 +202,7 @@ int BaseParser::getUnits(string roman)
 
 }
 
-
+//Creates a map (metal -> credits(per unit))
 void BaseParser::getMetalCreditsMap()
 {
 	vector<string>::iterator itr;
@@ -213,14 +229,18 @@ void BaseParser::getMetalCreditsMap()
 		
 	}
 
+	//Can be uncommented to Print the metalCreditsMap
+	/*
 	map <string,int>::iterator it; 
 	for(it = metalCreditsMap.begin(); it != metalCreditsMap.end(); it++)
 	{
 		cout << (*it).first <<" = " <<(*it).second<<"\n";
 	}
 	cout<<"\n\n";
+	*/
 }
 
+//helper function to get equivalent roman string from the inter-galactical language words
 string BaseParser::getRoman(vector<string> wordlist)
 {
 	string roman;
@@ -229,7 +249,8 @@ string BaseParser::getRoman(vector<string> wordlist)
 	return roman;
 }
 
-void BaseParser::getOutput()
+//Function which dumps the output of the queries in a vector string.
+void Parser::getOutput()
 {
 	string validQuery1 = "how much is ";
 	int lenValidQuery1 = validQuery1.size();
@@ -342,6 +363,7 @@ void Roman::setValue()
 
 }
 
+//function which validates if the given roman string is a valid string on the basis of the given rules.
 bool Roman::validateStr()
 {
 	int countD=0, countL=0, countV=0;
@@ -387,21 +409,11 @@ bool Roman::validateStr()
 
 int main()
 {
-	//Roman::setSymbolTable();
-	
-	/*Roman R("IIV", 0);
-	R.setSymbolTable();
-	R.setValue();
-	R.printValue();
-	bool validString = R.validateStr();
-	cout<<"\n"<<validString<<"\n";*/
 
-	vector<string> lines;
 	Parser ob;
-	lines = ob.parseInput("inputFile.txt");
-	ob.readAndSetInput(lines);
-	cout<<"\n\n";
+	ob.parseInput("inputFile.txt");
 	ob.getOutput();
+	cout<<"\n\n";
 	
 	return 0;
 }

@@ -5,10 +5,36 @@
 This can be complied in an executable which only needs inputFile.txt in it's parallel to run.
 The design has been explained in comments in the the cpp file.
 
+Following are the main classes that are used:
+
+Class BaseParser:
+	This 2 virtual functions: parseInput() and getOutput()
+	These are inherited and eventually defined in Class Parser.
+
+	parseInput():
+		This is to ensure that input can be given in any form of a string (implemented here to be taken as a filename)
+		Here I am using .txt as input file. The coder can extend it to use any other form of file as well and give it's own definition.
+	getOutput():
+		This can also be implemented in the desired form (according the requirement)
+		Here I am just outputting the result to the console.
+		It can also be dumped in a file if required.
+	
+	readAndSetInput()
+		The input file is prased to create 3 types of vector of strings 
+	It is then sent to 3 different functions to create:
+		intergalacticalMap (galactical unit --> roman symbol) and metalCreditsMap (metal --> per unit credits)
+		
+Class Parser:
+It inherits BaseParser and gives it's implementation of parseInput() and getOutput()
+
+Class Roman:
+This class is responsible for getting the roman string, validating the string and generating the appropriate integer value.
+	
+
 The code has following assumptions:
-1. Invalid queries are only handled for the final questions that asked (how much and how many's) and not the initial statements
-2. Handling for the case where the metal name appears in the query, whose information is not provided earlier, is not handled.
-3. While validating the roman string, the following rule has not been taken into account (Only one small-value symbol may be subtracted from any large-value symbol.) (Exampl, IIV is not considered invalid here)
+-While validating the roman string, the following rule has not been taken into account (Only one small-value symbol may be subtracted from any large-value symbol.) (Example, IIV is not considered invalid here)
+-In case of strange input, error message will be thrown and the app will not crash.
+-The case with no space between '?' and word is not handled and may give a little unexpected output. However, if required such corner cases can be also taken into account.
 
 ********************Problem One: Merchant's Guide to the Galaxy********************************
 

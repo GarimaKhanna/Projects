@@ -1,0 +1,58 @@
+<h1>Book list</h1>
+<hr>
+<form name="bookForm" novalidate ng-submit="addBook()">
+  <div class="form-group"
+      ng-class="{'has-error': bookForm.name.$invalid
+        && bookForm.name.$dirty}">
+    <input type="text" class="form-control focus" name="name"
+        placeholder="Book Name" autocomplete="off" required
+        ng-model="newBook.name">
+	 <input type="number" class="form-control focus" name="price"
+        placeholder="Price" autocomplete="off" required
+        ng-model="newBook.price">
+	 <input type="date" class="form-control focus" name="releaseDate"
+        placeholder="Content" autocomplete="off" required
+        ng-model="newBook.releaseDate">
+    <span class="has-error control-label" ng-show="
+        bookForm.name.$invalid && bookForm.name.$dirty">
+      Content is required.
+    </span>
+  </div>
+  <button class="btn btn-default" ng-disabled="bookForm.$invalid">Add</button>
+</form>
+<hr>
+
+SEARCH <input type="text" class="form-control focus" name="name"
+        placeholder="Book Name" autocomplete="off" required
+        ng-model="searchBook.name">
+<br><br>
+		
+</div>
+<div class="list-group">
+  <a class="list-group-item">
+	<table>
+	   <thead>
+                    <tr>
+                        <th>Name
+                            <button class="btn btn-mini btn-link" ng-click="sort('name')"><i class="icon-sort"></i>
+                            </button>
+                        </th>
+                        <th>Price
+                        </th>
+                        <th>Release Date
+                            <button class="btn btn-mini btn-link" ng-click="sort('releaseDate')"><i class="icon-sort"></i>
+                            </button>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+	  <tr ng-repeat="book in books | orderBy:orderProp:direction | filter: searchBook.name ">
+		<td>{{book.name}}</td>
+		<td>{{book.price}}</td>
+		<td>{{book.releaseDate}}</td>
+		<td style='width: 2%;'><i class="glyphicon glyphicon-remove pull-right"
+        ng-click="removeBook(book)"></i></td>
+	  </tr>
+	</table>
+  </a>
+</div>

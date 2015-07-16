@@ -1,0 +1,25 @@
+@charset "UTF-8";body{padding-top:50px}.glyphicon-remove:hover{cursor:pointer}
+
+table {
+    width: 100%;
+}
+
+table, th , td  {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 5px;
+}
+table tr:nth-child(odd)	{
+  background-color: #f1f1f1;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.sortorder:after {
+    content: '\25b2';
+  }
+.sortorder.reverse:after {
+    content: '\25bc';
+  }
+  
